@@ -1,0 +1,16 @@
+transaction_id,account_number,amount,transaction_date,description
+TXN001,ACC1001,"$1,234.56",15/03/2024,Grocery store purchase
+TXN002,acc1002 ,980.00,2024-03-16,
+TXN003, ACC1003 ,$250.75,17/03/2024,Utility bill payment
+TXN004,Acc1004,3400.00,2024-03-18,Salary deposit
+TXN005,ACC1005 ,$75.20,19/03/2024,
+TXN006,acc1006,1200.50,2024-03-20,Online purchase
+TXN007,ACC1007,$45.00,21/03/2024,Coffee shop
+TXN008, acc1008,600.00,2024-03-22,Rent payment
+TXN009,ACC1009,"$2,000.00",23/03/2024,
+TXN010,acc1010 ,150.99,2024-03-24,Pharmacy
+TXN011,ACC1011,$89.90,25/03/2024,Restaurant
+TXN012,Acc1012,500.00,2024-03-26,
+TXN013,acc1013,"$10,500.00",27/03/2024,Car payment
+TXN014,ACC1014 ,320.40,2024-03-28,Subscription renewal
+TXN015,acc1015,$60.00,29/03/2024,
