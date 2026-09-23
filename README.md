@@ -82,7 +82,11 @@ curl.exe -X POST http://localhost:8080/api/transactions -H "Content-Type: applic
 ```
 Debe devolver `422 Unprocessable Entity` con el mensaje de saldo insuficiente.
 
-Al revisar la consola del microservicio, cada transferencia exitosa muestra logs con un `traceId` común para toda la operación, y un log de la recomendación de IA que aparece **después** de que la respuesta HTTP ya fue enviada al cliente (evidencia de que la llamada a IA es asíncrona y no bloqueante).
+Como el backend corre en segundo plano dentro de Docker, el `curl` solo te muestra la respuesta HTTP — los logs de la aplicación no aparecen en esa misma terminal. Para verlos, abre otra terminal y corre:
+```
+docker logs -f smartbancs-transactions-service
+```
+Ahí sí vas a ver, para cada transferencia exitosa, logs con un `traceId` común para toda la operación, y un log de la recomendación de IA que aparece **después** de que la respuesta HTTP ya fue enviada al cliente (evidencia de que la llamada a IA es asíncrona y no bloqueante).
 
 ## Métricas
 
