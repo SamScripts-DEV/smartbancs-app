@@ -64,24 +64,22 @@ En una base de datos recién creada, estas cuentas quedan típicamente con `id` 
 
 ## Cómo probar
 
-Ejemplos con `curl.exe` en PowerShell (ajusta los `sourceAccountId`/`destinationAccountId` a los IDs reales que obtuviste en el paso anterior).
+Los cuerpos de las peticiones de ejemplo están en `requests/` como archivos JSON — así evitas problemas de comillas al copiar/pegar en PowerShell. Corre estos comandos desde la raíz del proyecto (ajusta los `sourceAccountId`/`destinationAccountId` dentro de esos archivos si tus IDs reales son distintos a los del paso anterior).
 
 **Transferencia exitosa:**
 ```
-curl.exe -X POST http://localhost:8080/api/transactions -H "Content-Type: application/json" -d '{"sourceAccountId":1,"destinationAccountId":2,"amount":100.00,"idempotencyKey":"demo-key-001"}'
+curl.exe -X POST http://localhost:8080/api/transactions -H "Content-Type: application/json" -d "@requests/transfer-success.json"
 ```
 
-**Idempotencia** (repite la misma petición con el mismo `idempotencyKey`; debe devolver la misma transacción sin duplicar el movimiento):
+**Idempotencia** (repite el mismo comando; debe devolver la misma transacción sin duplicar el movimiento, porque el archivo usa siempre el mismo `idempotencyKey`):
 ```
-curl.exe -X POST http://localhost:8080/api/transactions -H "Content-Type: application/json" -d '{"sourceAccountId":1,"destinationAccountId":2,"amount":100.00,"idempotencyKey":"demo-key-001"}'
+curl.exe -X POST http://localhost:8080/api/transactions -H "Content-Type: application/json" -d "@requests/transfer-success.json"
 ```
 
 **Error de saldo insuficiente** (usando la cuenta de saldo bajo como origen):
 ```
-curl.exe -X POST http://localhost:8080/api/transactions -H "Content-Type: application/json" -d '{"sourceAccountId":3,"destinationAccountId":1,"amount":1000.00,"idempotencyKey":"demo-key-002"}'
+curl.exe -X POST http://localhost:8080/api/transactions -H "Content-Type: application/json" -d "@requests/transfer-insufficient-balance.json"
 ```
-
-Si al pegar alguno de estos comandos en PowerShell obtienes `{"error":"An unexpected error occurred","status":500}`, revisa que el cuerpo JSON haya llegado completo (a veces el copiar/pegar corta o altera comillas) — usa el comando de una sola línea tal cual está aquí, sin dividirlo en varias líneas con backtick.
 Debe devolver `422 Unprocessable Entity` con el mensaje de saldo insuficiente.
 
 Al revisar la consola del microservicio, cada transferencia exitosa muestra logs con un `traceId` común para toda la operación, y un log de la recomendación de IA que aparece **después** de que la respuesta HTTP ya fue enviada al cliente (evidencia de que la llamada a IA es asíncrona y no bloqueante).
