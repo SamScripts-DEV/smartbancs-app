@@ -68,24 +68,20 @@ Ejemplos con `curl.exe` en PowerShell (ajusta los `sourceAccountId`/`destination
 
 **Transferencia exitosa:**
 ```
-curl.exe -X POST http://localhost:8080/api/transactions `
-  -H "Content-Type: application/json" `
-  -d '{"sourceAccountId":1,"destinationAccountId":2,"amount":100.00,"idempotencyKey":"demo-key-001"}'
+curl.exe -X POST http://localhost:8080/api/transactions -H "Content-Type: application/json" -d '{"sourceAccountId":1,"destinationAccountId":2,"amount":100.00,"idempotencyKey":"demo-key-001"}'
 ```
 
 **Idempotencia** (repite la misma petición con el mismo `idempotencyKey`; debe devolver la misma transacción sin duplicar el movimiento):
 ```
-curl.exe -X POST http://localhost:8080/api/transactions `
-  -H "Content-Type: application/json" `
-  -d '{"sourceAccountId":1,"destinationAccountId":2,"amount":100.00,"idempotencyKey":"demo-key-001"}'
+curl.exe -X POST http://localhost:8080/api/transactions -H "Content-Type: application/json" -d '{"sourceAccountId":1,"destinationAccountId":2,"amount":100.00,"idempotencyKey":"demo-key-001"}'
 ```
 
 **Error de saldo insuficiente** (usando la cuenta de saldo bajo como origen):
 ```
-curl.exe -X POST http://localhost:8080/api/transactions `
-  -H "Content-Type: application/json" `
-  -d '{"sourceAccountId":3,"destinationAccountId":1,"amount":1000.00,"idempotencyKey":"demo-key-002"}'
+curl.exe -X POST http://localhost:8080/api/transactions -H "Content-Type: application/json" -d '{"sourceAccountId":3,"destinationAccountId":1,"amount":1000.00,"idempotencyKey":"demo-key-002"}'
 ```
+
+Si al pegar alguno de estos comandos en PowerShell obtienes `{"error":"An unexpected error occurred","status":500}`, revisa que el cuerpo JSON haya llegado completo (a veces el copiar/pegar corta o altera comillas) — usa el comando de una sola línea tal cual está aquí, sin dividirlo en varias líneas con backtick.
 Debe devolver `422 Unprocessable Entity` con el mensaje de saldo insuficiente.
 
 Al revisar la consola del microservicio, cada transferencia exitosa muestra logs con un `traceId` común para toda la operación, y un log de la recomendación de IA que aparece **después** de que la respuesta HTTP ya fue enviada al cliente (evidencia de que la llamada a IA es asíncrona y no bloqueante).
